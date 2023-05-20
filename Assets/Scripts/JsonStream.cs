@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using UnityEngine;
 
 public class JsonStream
 {
@@ -8,26 +9,43 @@ public class JsonStream
     /// </summary>
     /// <param name="fileName">ファイル名</param>
     /// <param name="data">保存するテキスト</param>
-    private static void SaveText(string fileName, string json)
+    public static void SaveText(string fileName, string json)
     {
-        string combinedPath = Path.Combine(GetInternalStoragePath(), fileName);
-        using (var streamWriter = new StreamWriter(combinedPath))
+        try
         {
-            streamWriter?.WriteLine(json);
+            string combinedPath = Path.Combine(GetInternalStoragePath(), fileName);
+            using (StreamWriter streamWriter = new StreamWriter(combinedPath))
+            {
+                streamWriter?.WriteLine(json);
+            }
         }
+        catch (Exception e)
+        {
+            throw e;
+        }
+
     }
 
     /// <summary>
     /// ファイルから設定データを取得する
+    /// 指定した型定義にJsonデータを変換してから値を返す
     /// </summary>
     /// <param name="fileName"></param>
     /// <returns></returns>
-    private static string GetText(string fileName)
+    public static T GetText<T>(string fileName)
     {
-        string combinedPath = Path.Combine(GetInternalStoragePath(), fileName);
-        using (var streamReader = new StreamReader(combinedPath))
+        try
         {
-            return streamReader?.ReadLine();
+            string combinedPath = Path.Combine(GetInternalStoragePath(), fileName);
+            using (StreamReader streamReader = new StreamReader(combinedPath))
+            {
+                string json = streamReader?.ReadLine();
+                return JsonUtility.FromJson<T>(json);
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
         }
     }
 

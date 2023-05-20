@@ -1,0 +1,13 @@
+{
+    "start": "スタート",
+    "config": "コンフィグ",
+    "ok": "決定",
+    "cancel": "キャンセル",
+    "rule": "ルール",
+    "explanation": "JSONファイルで多言語対応の設定を行うサンプルです。",
+
+    "messages" : {
+        "helloUser": "こんにちは:attributeさん",
+        "required":":attributeは必ず入力してください"
+    }
+}

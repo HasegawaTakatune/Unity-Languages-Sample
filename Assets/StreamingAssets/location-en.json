@@ -1,0 +1,13 @@
+{
+    "start": "start",
+    "config": "config",
+    "ok": "ok",
+    "cancel": "cancel",
+    "rule": "rule",
+    "explanation": "This is a sample for setting multilingual support in a JSON file.",
+
+    "messages" : {
+        "helloUser": "Hello :attribute",
+        "required":":attribute is required"
+    }
+}
