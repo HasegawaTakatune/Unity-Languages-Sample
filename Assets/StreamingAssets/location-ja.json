@@ -1,10 +1,12 @@
 {
-    "start": "スタート",
-    "config": "コンフィグ",
-    "ok": "決定",
-    "cancel": "キャンセル",
-    "rule": "ルール",
-    "explanation": "JSONファイルで多言語対応の設定を行うサンプルです。",
+    "words": {
+        "start": "スタート",
+        "config": "コンフィグ",
+        "ok": "決定",
+        "cancel": "キャンセル",
+        "rule": "ルール",
+        "explanation": "JSONファイルで多言語対応の設定を行うサンプルです。"
+    },
 
     "messages" : {
         "helloUser": "こんにちは:attributeさん",

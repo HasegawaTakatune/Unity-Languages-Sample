@@ -3,23 +3,28 @@ using System.Reflection;
 using UnityEngine;
 
 [System.Serializable]
-public class MessagesJson
+public class Words
 {
-    string helloUser;
-    string required;
+    public string start;
+    public string config;
+    public string ok;
+    public string cancel;
+    public string rule;
+    public string explanation;
+}
+
+[System.Serializable]
+public class Messages
+{
+    public string helloUser;
+    public string required;
 }
 
 [System.Serializable]
 public class LanguagesJson
 {
-    string start;
-    string config;
-    string ok;
-    string cancel;
-    string rule;
-    string explanation;
-
-    MessagesJson messages;
+    public Words words;
+    public Messages messages;
 }
 
 public enum Location
@@ -31,14 +36,16 @@ public enum Location
 
 public class Languages
 {
+    private static Disc disc = Disc.STREAMING_ASSETS;
     private static readonly string LANGUAGE_EN_JSON_FILE_NAME = "location-en.json";
     private static readonly string LANGUAGE_JA_JSON_FILE_NAME = "location-ja.json";
 
     public static Location location = Location.ENGLISH;
     private static LanguagesJson languageJson = null;
 
-    public static void Init(Location local = Location.ENGLISH)
+    public static void Init(Location local = Location.ENGLISH, Disc dsc = Disc.STREAMING_ASSETS)
     {
+        disc = dsc;
         location = local;
         Setup();
     }
@@ -62,17 +69,25 @@ public class Languages
 
         try
         {
-            languageJson = JsonStream.GetText<LanguagesJson>(fileName);
+            languageJson = JsonStream.GetText<LanguagesJson>(disc, fileName);
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            throw e;
         }
     }
 
     public static string GetTextByKey(string key)
     {
-        object value = GetValueByKey(key, languageJson);
+        object value = null;
+        try
+        {
+            value = GetValueByKey(string.Format("words.{0}", key), languageJson);
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
 
         if (value == null) return null;
         return value.ToString();
@@ -80,10 +95,17 @@ public class Languages
 
     public static string GetMessageByKey(string key, string attribute)
     {
-        object value = GetValueByKey(string.Format("messages.{0}", key), languageJson);
+        object value = null;
+        try
+        {
+            value = GetValueByKey(string.Format("messages.{0}", key), languageJson);
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
 
-        if (value == null)
-            return null;
+        if (value == null) return null;
 
         string str = value.ToString();
         return str.Replace(":attribute", attribute);
@@ -97,10 +119,11 @@ public class Languages
 
         foreach (string currentKey in keys)
         {
-            PropertyInfo property = null;
+            Debug.Log(string.Format("current key >> {0}", currentKey));
+            FieldInfo property = null;
             try
             {
-                property = type.GetProperty(currentKey);
+                property = type.GetField(currentKey);
             }
             catch (Exception e)
             {
@@ -112,7 +135,7 @@ public class Languages
                 try
                 {
                     currentInstance = property.GetValue(currentInstance);
-                    type = property.PropertyType;
+                    type = property.FieldType;
                 }
                 catch (Exception e)
                 {

@@ -1,6 +1,14 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum Disc
+{
+    STORAGE,
+    STREAMING_ASSETS,
+    LENGTH,
+}
 
 public class JsonStream
 {
@@ -9,11 +17,13 @@ public class JsonStream
     /// </summary>
     /// <param name="fileName">ファイル名</param>
     /// <param name="data">保存するテキスト</param>
-    public static void SaveText(string fileName, string json)
+    public static void SaveText(Disc disc, string fileName, string json)
     {
+        string directory = GetDirectoryPath(disc);
+
         try
         {
-            string combinedPath = Path.Combine(GetInternalStoragePath(), fileName);
+            string combinedPath = Path.Combine(directory, fileName);
             using (StreamWriter streamWriter = new StreamWriter(combinedPath))
             {
                 streamWriter?.WriteLine(json);
@@ -23,7 +33,6 @@ public class JsonStream
         {
             throw e;
         }
-
     }
 
     /// <summary>
@@ -32,14 +41,17 @@ public class JsonStream
     /// </summary>
     /// <param name="fileName"></param>
     /// <returns></returns>
-    public static T GetText<T>(string fileName)
+    public static T GetText<T>(Disc disc, string fileName)
     {
+        string directory = GetDirectoryPath(disc);
+        string json = "";
+
         try
         {
-            string combinedPath = Path.Combine(GetInternalStoragePath(), fileName);
+            string combinedPath = Path.Combine(directory, fileName);
             using (StreamReader streamReader = new StreamReader(combinedPath))
             {
-                string json = streamReader?.ReadLine();
+                json = streamReader?.ReadToEnd();
                 return JsonUtility.FromJson<T>(json);
             }
         }
@@ -47,6 +59,33 @@ public class JsonStream
         {
             throw e;
         }
+    }
+
+    /// <summary>
+    ///  Storage・StreamingAssetsを切り替えてファイルディレクトリを生成する
+    /// </summary>
+    /// <returns>ファイルディレクトリ</returns>
+    private static string GetDirectoryPath(Disc disc)
+    {
+        try
+        {
+            switch (disc)
+            {
+                case Disc.STORAGE:
+                    return GetInternalStoragePath();
+
+                case Disc.STREAMING_ASSETS:
+                    return Application.streamingAssetsPath;
+
+                default:
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+        return null;
     }
 
     /// <summary>
