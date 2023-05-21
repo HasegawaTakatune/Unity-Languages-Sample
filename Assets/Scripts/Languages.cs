@@ -3,6 +3,9 @@ using System.Reflection;
 
 using JsonStream;
 
+/// <summary>
+/// 多言語対応の単語を格納するクラス
+/// </summary>
 [System.Serializable]
 public class Words
 {
@@ -14,6 +17,9 @@ public class Words
     public string explanation;
 }
 
+/// <summary>
+/// 多言語対応のメッセージを格納するクラス
+/// </summary>
 [System.Serializable]
 public class Messages
 {
@@ -21,6 +27,9 @@ public class Messages
     public string required;
 }
 
+/// <summary>
+/// 多言語対応の値を格納するクラス
+/// </summary>
 [System.Serializable]
 public class LanguagesJson
 {
@@ -28,6 +37,9 @@ public class LanguagesJson
     public Messages messages;
 }
 
+/// <summary>
+/// ロケーション（地域）
+/// </summary>
 public enum Location
 {
     ENGLISH,
@@ -35,6 +47,9 @@ public enum Location
     LENGTH
 }
 
+/// <summary>
+/// 多言語対応
+/// </summary>
 public class Languages
 {
     private static Disc disc = Disc.STREAMING_ASSETS;
@@ -44,6 +59,11 @@ public class Languages
     public static Location location = Location.ENGLISH;
     private static LanguagesJson languageJson = null;
 
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    /// <param name="local">言語地域（Location）</param>
+    /// <param name="dsc">ファイル保存する種別（StreamingAssets・Storage）</param>
     public static void Init(Location local = Location.ENGLISH, Disc dsc = Disc.STREAMING_ASSETS)
     {
         disc = dsc;
@@ -51,12 +71,19 @@ public class Languages
         Setup();
     }
 
+    /// <summary>
+    /// 言語ロケーションを設定する
+    /// </summary>
+    /// <param name="local">言語地域（Location）</param>
     public static void SetLocation(Location local)
     {
         location = local;
         Setup();
     }
 
+    /// <summary>
+    /// 言語を再設定する
+    /// </summary>
     private static void Setup()
     {
         string fileName = null;
@@ -78,6 +105,11 @@ public class Languages
         }
     }
 
+    /// <summary>
+    /// テキスト取得
+    /// </summary>
+    /// <param name="key">キー（テキストの種類）</param>
+    /// <returns>テキスト</returns>
     public static string GetTextByKey(string key)
     {
         object value = null;
@@ -94,6 +126,12 @@ public class Languages
         return value.ToString();
     }
 
+    /// <summary>
+    /// メッセージ取得
+    /// </summary>
+    /// <param name="key">キー（メッセージの種類）</param>
+    /// <param name="attribute">差し替える文字列</param>
+    /// <returns>置換後のメッセージ</returns>
     public static string GetMessageByKey(string key, string attribute)
     {
         object value = null;
@@ -112,6 +150,12 @@ public class Languages
         return str.Replace(":attribute", attribute);
     }
 
+    /// <summary>
+    /// インスタンスの変数をキー指定で取得する
+    /// </summary>
+    /// <param name="key">キー（フィールド名）</param>
+    /// <param name="instance">キー取得するインスタンス</param>
+    /// <returns>フィールド値</returns>
     private static object GetValueByKey(string key, object instance)
     {
         Type type = instance.GetType();

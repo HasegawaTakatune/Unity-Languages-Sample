@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace JsonStream
 {
+    /// <summary>
+    /// ファイル保存する種別（StreamingAssets・Storage）
+    /// </summary>
     public enum Disc
     {
         STORAGE,
@@ -11,6 +14,9 @@ namespace JsonStream
         LENGTH,
     }
 
+    /// <summary>
+    /// ファイルストリーム操作
+    /// </summary>
     public class Stream
     {
         /// <summary>
