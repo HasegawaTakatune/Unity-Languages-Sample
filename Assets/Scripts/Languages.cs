@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
-using UnityEngine;
+
+using JsonStream;
 
 [System.Serializable]
 public class Words
@@ -69,7 +70,7 @@ public class Languages
 
         try
         {
-            languageJson = JsonStream.GetText<LanguagesJson>(disc, fileName);
+            languageJson = JsonStream.Stream.GetText<LanguagesJson>(disc, fileName);
         }
         catch (Exception e)
         {
@@ -119,7 +120,6 @@ public class Languages
 
         foreach (string currentKey in keys)
         {
-            Debug.Log(string.Format("current key >> {0}", currentKey));
             FieldInfo property = null;
             try
             {
